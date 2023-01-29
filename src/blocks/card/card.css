@@ -1,0 +1,13 @@
+.card {
+    width: 282px;
+min-height: 361px;
+display: grid;
+grid-template-columns: 245px 37px;
+grid-template-rows: repeat(2, auto);
+
+background: #FFFFFF;
+border-radius: 10px;
+
+box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+position: relative;
+}

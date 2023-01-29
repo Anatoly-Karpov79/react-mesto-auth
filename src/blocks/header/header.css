@@ -1,0 +1,22 @@
+.header {
+    display: grid;
+    max-width: 880px;
+    width: 100%;
+    min-height: 74px;
+    margin: 45px auto  0 auto;
+    border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+
+@media screen and (max-width: 920px) {
+    .header {
+        width: 80%;
+    
+}
+}
+@media screen and (max-width: 320px) {
+    .header {
+        width: 320px;
+      margin: 28px 0 0 0;
+      min-height: 56px;
+    }
+}
