@@ -9,6 +9,9 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
+import Sign_up from "./Sign_up";
+import { Route, Switch, Redirect } from 'react-router-dom';
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -21,6 +24,9 @@ function App() {
   const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] =
     useState(false);
   const [deletedCard, setDeletedCard] = useState({});
+  const [isSign_upOpen, setIsSign_upOpen] = useState({});
+  const loggedIn = (false);
+  
 
   useEffect(() => {
     api
@@ -104,6 +110,11 @@ function App() {
   function handleCardClick(card) {
     setSelectedCard(card);
   }
+
+  function handleSign_upClick() {
+    setIsSign_upOpen(true);
+  }
+  
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
@@ -157,17 +168,32 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
-      <Main
-        onEditAvatar={handleEditAvatarClick}
-        onAddPlace={handleAddPlaceClick}
-        onEditProfile={handleEditProfileClick}
-        onCardClick={handleCardClick}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
-        cards={cards}
-      />
+<Switch>
+<ProtectedRoute
+                  exact path="/"
+                  loggedIn={loggedIn}
+                  component={Main}
+                  onEditAvatar={handleEditAvatarClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditProfile={handleEditProfileClick}
+                  onCardClick={handleCardClick}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                  
+                />
+  <Route path="/signup">
+  <Sign_up handleSign_upClick={handleSign_upClick} setIsSign_upOpen={setIsSign_upOpen} />
+  </Route>
+  <Route path="*">
+                {loggedIn ? <Redirect to="/" /> : <Redirect to="/signup" />}
+              </Route>
+</Switch>
+
+      
 
       <Footer />
+     
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
