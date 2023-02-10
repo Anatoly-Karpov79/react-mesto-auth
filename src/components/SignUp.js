@@ -2,11 +2,9 @@ import PopupWithForm from "./PopupWithForm.js";
 import React, { useContext, useState, useEffect } from "react";
 
 
-function Sign_up( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upOpen }) {
+function SignUp( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upOpen }) {
 
-  React.useEffect(() => {
-    setIsSign_upOpen(true);
-  }, []);
+  
 
     const [email, setEmail] = useState("");
     const [description, setDescription] = useState("");
@@ -73,4 +71,4 @@ function Sign_up( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upO
     )
 }
 
-export default Sign_up;
+export default SignUp;
