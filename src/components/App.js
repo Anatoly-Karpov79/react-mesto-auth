@@ -9,9 +9,10 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
-import SignUp from "./SignUp";
+import Register from "./Register";
 import { Route, Switch, Redirect } from 'react-router-dom';
-import ProtectedRoute from "./ProtectedRoute.js";
+import ProtectedRoute  from "./ProtectedRoute";
+import Login from "./Login";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -25,8 +26,8 @@ function App() {
     useState(false);
   const [deletedCard, setDeletedCard] = useState({});
   const [isSign_upOpen, setIsSign_upOpen] = useState({});
-  const [loggedIn] = useState(true);
-  console.log(loggedIn);
+  const [loggedIn, setLoggedIn] = useState(false);
+  
 
   useEffect(() => {
     api
@@ -182,12 +183,10 @@ function App() {
                   onCardDelete={handleCardDelete}
                   
                 />
-  <Route path="/sign_up">
-  <SignUp isOpen={isSign_upOpen} handleSign_upClick={handleSign_upClick} setIsSign_upOpen={setIsSign_upOpen} />
-  </Route>
-  <Route path="*">
-                {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign_up" />}
-              </Route>
+  <Route path='/signin' >
+    <Login />
+    </Route>
+  
 </Switch>
 
       

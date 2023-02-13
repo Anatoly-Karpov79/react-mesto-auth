@@ -2,7 +2,7 @@ import PopupWithForm from "./PopupWithForm.js";
 import React, { useContext, useState, useEffect } from "react";
 
 
-function SignUp( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upOpen }) {
+function Register( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upOpen }) {
 
   
 
@@ -71,4 +71,4 @@ function SignUp( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upOp
     )
 }
 
-export default SignUp;
+export default Register;
