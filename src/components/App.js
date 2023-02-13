@@ -11,7 +11,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 import SignUp from "./SignUp";
 import { Route, Switch, Redirect } from 'react-router-dom';
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoute.js";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -25,8 +25,8 @@ function App() {
     useState(false);
   const [deletedCard, setDeletedCard] = useState({});
   const [isSign_upOpen, setIsSign_upOpen] = useState({});
-  const loggedIn = (true);
-  
+  const [loggedIn] = useState(true);
+  console.log(loggedIn);
 
   useEffect(() => {
     api
