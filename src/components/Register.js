@@ -1,73 +1,50 @@
-import PopupWithForm from "./PopupWithForm.js";
-import React, { useContext, useState, useEffect } from "react";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
-function Register( {isOpen, onClose, isLoading ,handleSign_upClick, setIsSign_upOpen }) {
+const Register = (props) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-  
-
-    const [email, setEmail] = useState("");
-    const [description, setDescription] = useState("");
-
-    function handleChangeEmail(e) {
-        setEmail(e.target.value);
-      }
-      function handleChangePassword(e) {
-        setDescription(e.target.value);
-      }
-
-      function handleSubmit(e) {
-        // Запрещаем браузеру переходить по адресу формы
+    function handleRegisterSubmit(e) {
         e.preventDefault();
-    
-        // Передаём значения управляемых компонентов во внешний обработчик
-        handleSign_upClick({
-          email,
-          about: description,
-        });
-      }
-    return(
-        <PopupWithForm
-        name={"popup_edit"}
-      isOpen={isOpen}
-      title={"Регистрация"}
-      onClose={onClose}
-      btnText={"Сохранить"}
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      loadingText="Сохранение..."
-        >
-<fieldset className="form__set">
-        <input
-          type="text"
-          className="popup__input popup__input_type_name"
-          id="name-input"
-          placeholder="Имя"
-          name="name"
-          required
-          minLength={2}
-          maxLength={40}
-          value={email || ""}
-          onChange={handleChangeEmail}
-        />
-        <span className="form__input-error popup__input-error name-input-error" />
-        <input
-          type="text"
-          className="popup__input popup__input_type_about"
-          id="about-input"
-          placeholder="Профессия"
-          name="about"
-          required
-          minLength={2}
-          maxLength={200}
-          value={description || ""}
-          onChange={handleChangePassword}
-        />
-        <span className="form__input-error popup__input-error about-input-error" />
-      </fieldset>
+        if (!email || !password) {
+            return;
+        }
+        props.onRegister(password, email);
+        setEmail('');
+        setPassword('');
+    }
 
-        </PopupWithForm>
-        
+    function handleEmail(e) {
+        setEmail(e.target.value);
+    }
+
+    function handlePassword(e) {
+        setPassword(e.target.value);
+    }
+    return(
+      
+        <section className="login">
+            <h1 className="login__title">Регистрация</h1>
+            <form className="login__form">
+                <input 
+                  type="email" 
+                  onChange={handleEmail} 
+                  placeholder="Email" 
+                  className="login__input" 
+                />
+                <input 
+                  type="password" 
+                  onChange={handlePassword} 
+                  placeholder="Пароль" 
+                  className="login__input" 
+                />
+                <button onClick={handleRegisterSubmit} className="login__button">Зарегистрироваться</button>
+            </form>
+            <Link to="/sign-in" className="login__subtext">Уже зарегистрированы? Войти</Link>
+           
+        </section>
     )
 }
 

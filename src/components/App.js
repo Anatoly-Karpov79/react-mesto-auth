@@ -183,9 +183,13 @@ function App() {
                   onCardDelete={handleCardDelete}
                   
                 />
-  <Route path='/signin' >
+  <Route path='/sign-in' >
     <Login />
-    </Route>
+        </Route>
+ 
+  <Route path='/sign-up' >
+    <Register />
+  </Route>
   
 </Switch>
 
