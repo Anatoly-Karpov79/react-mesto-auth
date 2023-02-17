@@ -1,13 +1,19 @@
  
 
 import React from 'react';
-import { Redirect  } from "react-router-dom";
+import { Redirect, Route  } from "react-router-dom";
 
 // этот компонент принимает другой компонент в качестве пропса
 // он также может взять неограниченное число пропсов и передать их новому компоненту
-const ProtectedRoute = ({ сomponent: Component, ...props  }) => {
+const ProtectedRoute = ({ component: Component, ...props  }) => {
   return (
-    props.loggedIn ? <Component {...props} /> : <Redirect  to="/sing_up" />
-)}
+    <Route>
+      {
+       () => props.loggedIn ? <Component {...props} /> : <Redirect  to="/sign-in" />
+      }
+      
+    </Route>
+    
+)};
 
 export default ProtectedRoute; 
