@@ -1,20 +1,24 @@
-import { Route, Switch, Link } from "react-router-dom";
+import {  Link, useLocation  } from "react-router-dom";
+
+
 
 function Header() {
+
+  const location = useLocation();
     return (
       
       <header className="header">
         <div className="header__logo" /> 
-        <Switch>
-          <Route path='/sign-in'>
-            <Link to='sign-up' className="header__link">Регистрация</Link>
-          </Route>
-
-          <Route path='/sign-up'>
-            <Link to='sign-in' className="header__link">Войти</Link>
-          </Route>
-
-        </Switch>
+        {location.pathname === '/sign-in' && (
+          <Link to="/sign-up" className="header__link">
+            Регистрация
+          </Link>
+        )}
+        {location.pathname === '/sign-up' && (
+          <Link to="/sign-in" className="header__link">
+            Войти
+          </Link>
+        )}
 
       </header>
     )

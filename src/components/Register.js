@@ -11,9 +11,8 @@ const Register = (props) => {
         if (!email || !password) {
             return;
         }
-        props.onRegister(password, email);
-        setEmail('');
-        setPassword('');
+        props.onRegister(email, password);
+       
     }
 
     function handleEmail(e) {

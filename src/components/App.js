@@ -10,9 +10,10 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 import Register from "./Register";
-import { Route, Switch, Redirect } from 'react-router-dom';
-import ProtectedRoute  from "./ProtectedRoute";
+import { Route, Switch, useHistory } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
+import * as auth from "../utils/auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -25,9 +26,49 @@ function App() {
   const [isConfirmDeletePopupOpen, setIsConfirmDeletePopupOpen] =
     useState(false);
   const [deletedCard, setDeletedCard] = useState({});
-  const [isSign_upOpen, setIsSign_upOpen] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
-  
+  const [email, setEmail] = useState("");
+  const history = useHistory();
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth
+        .getContent(jwt)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            history.push("/");
+            setEmail(res.data.email);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  });
+
+  useEffect(() => {
+    if (loggedIn) {
+      api
+        .getUserInfo()
+        .then((profileInfo) => {
+          setCurrentUser(profileInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      api
+        .getCards()
+        .then((cardsData) => {
+          setCards(cardsData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     api
@@ -112,10 +153,6 @@ function App() {
     setSelectedCard(card);
   }
 
-  function handleSign_upClick() {
-    setIsSign_upOpen(true);
-  }
-  
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
@@ -166,37 +203,63 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
+  function handleLogin(email, password) {
+    auth.authorize(email, password)
+      .then(res => {
+        if (res) {
+          setLoggedIn(true);
+          localStorage.setItem('jwt', res.token);
+          history.push('./');
+        }
+      })
+      .catch(err => {
+        
+        console.log(err);
+      })
+  }
+
+  function handleRegister(email, password) {
+    auth.register(email, password)
+      .then(res => {
+        if (res) {
+          
+          history.push('./sign-in');
+        }
+      })
+      .catch(err => {
+        console.log(email)
+        console.log(err);
+      })
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
-<Switch>
-<ProtectedRoute
-                  exact path="/"
-                  loggedIn={loggedIn}
-                  component={Main}
-                  onEditAvatar={handleEditAvatarClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onEditProfile={handleEditProfileClick}
-                  onCardClick={handleCardClick}
-                  cards={cards}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                  
-                />
-  <Route path='/sign-in' >
-    <Login />
+      <Switch>
+        <ProtectedRoute
+          exact
+          path="/"
+          loggedIn={loggedIn}
+          component={Main}
+          onEditAvatar={handleEditAvatarClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditProfile={handleEditProfileClick}
+          onCardClick={handleCardClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+        />
+        <Route exact path="/sign-in">
+          <Login onLogin={handleLogin}/>
         </Route>
- 
-  <Route path='/sign-up' >
-    <Register />
-  </Route>
-  
-</Switch>
 
-      
+        <Route exact path="/sign-up">
+          <Register onRegister={handleRegister}/>
+        </Route>
+      </Switch>
 
       <Footer />
-     
+
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
