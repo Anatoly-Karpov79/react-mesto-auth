@@ -1,27 +1,15 @@
-import {  Link, useLocation  } from "react-router-dom";
+import logo from '../images/logo.svg';
 
+function Header({children}) {
 
-
-function Header() {
-
-  const location = useLocation();
     return (
-      
-      <header className="header">
-        <div className="header__logo" /> 
-        {location.pathname === '/sign-in' && (
-          <Link to="/sign-up" className="header__link">
-            Регистрация
-          </Link>
-        )}
-        {location.pathname === '/sign-up' && (
-          <Link to="/sign-in" className="header__link">
-            Войти
-          </Link>
-        )}
-
-      </header>
-    )
+        <div className="page__container">
+            <div className="header">
+                <img className="header__logo" src={logo} alt="логотип Mesto"/>
+                {children}
+            </div>
+        </div>
+    );
 }
 
 export default Header;
