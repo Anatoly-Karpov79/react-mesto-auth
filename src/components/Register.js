@@ -8,9 +8,7 @@ const Register = (props) => {
 
     function handleRegisterSubmit(e) {
         e.preventDefault();
-        if (!email || !password) {
-            return;
-        }
+        
         props.onRegister(email, password);
        
     }
@@ -41,7 +39,7 @@ const Register = (props) => {
                 />
                 <button onClick={handleRegisterSubmit} className="login__button">Зарегистрироваться</button>
             </form>
-            <Link to="/sign-in" className="login__subtext">Уже зарегистрированы? Войти</Link>
+            <Link to="sign-in" className="login__subtext">Уже зарегистрированы? Войти</Link>
            
         </section>
     )

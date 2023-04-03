@@ -10,10 +10,11 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 import Register from "./Register";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Navigate, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import * as auth from "../utils/auth";
+
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -28,25 +29,28 @@ function App() {
   const [deletedCard, setDeletedCard] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
+  const [checkToken, setCheckToken] = useState(false);
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
+      setCheckToken(true)
       auth
         .getContent(jwt)
         .then((res) => {
           if (res) {
-            setLoggedIn(true);
-            history.push("/");
-            setEmail(res.data.email);
+            setLoggedIn(loggedIn);
+            navigate("/", {replace: true});
+            setEmail(email);
+            console.log(jwt);
           }
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  });
+  }, []); 
 
   useEffect(() => {
     if (loggedIn) {
@@ -54,13 +58,14 @@ function App() {
         .getUserInfo()
         .then((profileInfo) => {
           setCurrentUser(profileInfo);
+          console.log(profileInfo);
         })
         .catch((err) => {
           console.log(err);
         });
 
       api
-        .getCards()
+        .getInitialCards()
         .then((cardsData) => {
           setCards(cardsData);
         })
@@ -70,7 +75,7 @@ function App() {
     }
   }, [loggedIn]);
 
-  useEffect(() => {
+ /* useEffect(() => {
     api
       .getUserInfo()
       .then((userInfo) => {
@@ -90,7 +95,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, []);*/
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -203,14 +208,18 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
-  function handleLogin(email, password) {
+  function handleLogin(password, email ) {
+    console.log(email, password)
     auth.authorize(email, password)
       .then(res => {
-        if (res) {
+        
+          
           setLoggedIn(true);
           localStorage.setItem('jwt', res.token);
-          history.push('./');
-        }
+          navigate("/", {replace: true});
+          
+          
+        
       })
       .catch(err => {
         
@@ -221,46 +230,46 @@ function App() {
   function handleRegister(email, password) {
     auth.register(email, password)
       .then(res => {
-        if (res) {
+        console.log("registrok")
           
-          history.push('./sign-in');
-        }
+        navigate("./signin'", {replace: true});
+        
       })
       .catch(err => {
-        console.log(email)
+       
         console.log(err);
       })
   }
+  /*
+
+          
+  */
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
-      <Switch>
-        <ProtectedRoute
-          exact
-          path="/"
-          loggedIn={loggedIn}
-          component={Main}
-          onEditAvatar={handleEditAvatarClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditProfile={handleEditProfileClick}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
-        <Route exact path="/sign-in">
-          <Login onLogin={handleLogin}/>
-        </Route>
+      <Routes >
+          <Route exact path='/sign-up' element={<Register onRegister={handleRegister}/>} />
+          <Route exact path='/sign-in' element={<Login onLogin={handleLogin}/>} />
+      
+      
+     
+      
+      <Route exact path='/' element={
+            <ProtectedRoute loggedIn={loggedIn} checkToken={checkToken}>
 
-        <Route exact path="/sign-up">
-          <Register onRegister={handleRegister}/>
-        </Route>
-      </Switch>
+        <Main 
+component={Main}
+onEditAvatar={handleEditAvatarClick}
+onAddPlace={handleAddPlaceClick}
+onEditProfile={handleEditProfileClick}
+onCardClick={handleCardClick}
+cards={cards}
+onCardLike={handleCardLike}
+onCardDelete={handleCardDelete}
+/>
 
-      <Footer />
-
-      <EditProfilePopup
+        <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
         onUpdateUser={handleUpdateUser}
@@ -273,14 +282,15 @@ function App() {
         onUpdateAvatar={handleUpdateAvatar}
         isLoading={isLoading}
       />
-      <AddPlacePopup
+          
+       <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
         onAddPlace={handleAddPlaceSubmit}
         isLoading={isLoading}
       />
-
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        
+       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
       <ConfirmDeletePopup
         isOpen={isConfirmDeletePopupOpen}
@@ -289,6 +299,21 @@ function App() {
         onDelete={handleDeleteSubmit}
         card={deletedCard}
       />
+       </ProtectedRoute>
+          }/>
+
+<Route path="/"
+            element={loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />}
+          />
+
+      </Routes >
+
+      <Footer />
+
+      
+      
+
+     
     </CurrentUserContext.Provider>
   );
 }
