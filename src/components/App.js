@@ -38,32 +38,11 @@ function App() {
   const [info, setInfo] = useState({ image: "", text: "" });
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      setCheckToken(true);
-      auth
-        .getContent(jwt)
-        .then((res) => {
-          if (res) {
-            setLoggedIn(loggedIn);
-            navigate("/", { replace: true });
-            setEmail(res.data.email);
-            console.log(jwt);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [loggedIn]);
-
-  useEffect(() => {
     if (loggedIn) {
       api
         .getUserInfo()
         .then((profileInfo) => {
           setCurrentUser(profileInfo);
-          console.log(profileInfo);
         })
         .catch((err) => {
           console.log(err);
@@ -80,27 +59,22 @@ function App() {
     }
   }, [loggedIn]);
 
-  /* useEffect(() => {
-    api
-      .getUserInfo()
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((initialCards) => {
-        setCards(initialCards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);*/
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      setCheckToken(true);
+      auth
+        .getContent(jwt)
+        .then((res) => {
+          setLoggedIn(true);
+          navigate("/", { replace: true });
+          setEmail(res.data.email);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
@@ -214,12 +188,11 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
-  function ChooseInfoTooltip (info) {
+  function ChooseInfoTooltip(info) {
     setInfo({ image: info.image, text: info.text });
   }
 
   function handleLogin(password, email) {
-    console.log(email, password);
     auth
       .authorize(email, password)
       .then((res) => {
@@ -240,13 +213,12 @@ function App() {
     auth
       .register(email, password)
       .then((res) => {
-        
         setTimeout(setShowTooltip, 1000, true);
         ChooseInfoTooltip({
           image: success,
-          text:'Вы успешно зарегистрировались'
-        })
-        setTimeout(navigate, 3000, '/sign-in');
+          text: "Вы успешно зарегистрировались",
+        });
+        setTimeout(navigate, 3000, "/sign-in");
         setEmail(email);
       })
       .catch((err) => {
@@ -263,7 +235,7 @@ function App() {
     navigate("/sign-up");
     setLoggedIn(false);
   }
- 
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header>
@@ -337,11 +309,7 @@ function App() {
         />
       </Routes>
 
-      <InfoTooltip 
-        isOpen={showTooltip} 
-        onClose={closeAllPopups} 
-        info={info}
-      />
+      <InfoTooltip isOpen={showTooltip} onClose={closeAllPopups} info={info} />
 
       <Footer />
     </CurrentUserContext.Provider>
