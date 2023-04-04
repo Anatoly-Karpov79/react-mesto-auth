@@ -1,12 +1,15 @@
 function InfoTooltip({isOpen, onClose, info}) {
 
     return (
-        <div className= {`popup ${isOpen ? 'popup_visible' : ''} `}> 
-        <div className="popup__overlay"></div>
+        <div className= {`popup ${isOpen ? 'popup_opened' : ''} `}> 
+        
             <div className="popup__container">
-                <button id="closeButton" type ="button" aria-label="close" onClick={onClose}
-                    className="popup__close-button opacity-buttons">
-                </button>
+            <button
+          aria-label="Close"
+          type="button"
+          className="popup__close-popup popup__button-close"
+          onClick={onClose}
+        />
                 <div >
                     <img
                         className='popup__infoToolTip_image'

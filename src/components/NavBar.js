@@ -10,12 +10,12 @@ function NavBar({ loggedIn, email, signOut}) {
     <nav className="navBar__container">
       {loggedIn ?
         (<>
-          <h2 className="navBar__link">{email}</h2>
-          <Link to='' onClick= {signOut} className="navBar__link_out">Выйти</Link>
+          <h2 className="navBar__link">{ email }</h2>
+          <Link to='' onClick= {signOut} className="navBar__link">Выйти</Link>
         </>)
       : 
         (<>
-          <Link to={linkRoute} className="navBar__link_out">{textBar}</Link>
+          <Link to={linkRoute} className="navBar__link">{textBar}</Link>
         </>)
       }
     </nav>

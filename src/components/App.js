@@ -47,7 +47,7 @@ function App() {
           if (res) {
             setLoggedIn(loggedIn);
             navigate("/", { replace: true });
-            setEmail(res.email);
+            setEmail(res.data.email);
             console.log(jwt);
           }
         })
@@ -170,6 +170,7 @@ function App() {
     setIsConfirmDeletePopupOpen(false);
     setDeletedCard({});
     setSelectedCard({});
+    setShowTooltip(false);
   }
 
   function handleUpdateUser(name, about) {
@@ -239,16 +240,14 @@ function App() {
     auth
       .register(email, password)
       .then((res) => {
-        console.log("registrok");
         
-        
-        setEmail(email);
         setTimeout(setShowTooltip, 1000, true);
         ChooseInfoTooltip({
           image: success,
           text:'Вы успешно зарегистрировались'
         })
         setTimeout(navigate, 3000, '/sign-in');
+        setEmail(email);
       })
       .catch((err) => {
         setTimeout(setShowTooltip, 1000, true);
@@ -264,11 +263,7 @@ function App() {
     navigate("/sign-up");
     setLoggedIn(false);
   }
-  /*
-
-          
-  */
-
+ 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header>
