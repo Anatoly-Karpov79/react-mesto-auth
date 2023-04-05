@@ -188,7 +188,7 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
-  function ChooseInfoTooltip(info) {
+  function chooseInfoTooltip(info) {
     setInfo({ image: info.image, text: info.text });
   }
 
@@ -202,7 +202,7 @@ function App() {
       })
       .catch((err) => {
         setShowTooltip(true);
-        ChooseInfoTooltip({
+        chooseInfoTooltip({
           image: error,
           text: "Что-то пошло не так! Попробуйте еще раз!",
         });
@@ -214,7 +214,7 @@ function App() {
       .register(email, password)
       .then((res) => {
         setTimeout(setShowTooltip, 1000, true);
-        ChooseInfoTooltip({
+        chooseInfoTooltip({
           image: success,
           text: "Вы успешно зарегистрировались",
         });
@@ -223,7 +223,7 @@ function App() {
       })
       .catch((err) => {
         setTimeout(setShowTooltip, 1000, true);
-        ChooseInfoTooltip({
+        chooseInfoTooltip({
           image: error,
           text: "Что-то пошло не так! Попробуйте еще раз!",
         });
@@ -304,7 +304,7 @@ function App() {
         />
 
         <Route
-          path="/"
+         exact path="/*"
           element={loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />}
         />
       </Routes>
